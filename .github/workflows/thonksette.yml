@@ -1,0 +1,52 @@
+# This is a basic workflow that is manually triggered
+
+name: thonksette v114514
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      mysteriousbashscripturl:
+        description: 'URL of the mysterious bash script that would later commit anticsette: '
+        default: ''
+        required: true
+      spaceclear:
+        description: 'clear space? '
+        default: ''
+        required: false
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  anticsette:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Checkout Codes
+      uses: actions/checkout@v2
+
+    - name: Pre-processing
+      run: |
+        [ "${{ github.event.inputs.spaceclear }}" ] && sudo rm -rf /usr/local/lib/android # will release about 10 GB if you don't need Android
+        [ "${{ github.event.inputs.spaceclear }}" ] && sudo rm -rf /usr/share/dotnet # will release about 20GB if you don't need .NET
+        [ "${{ github.event.inputs.spaceclear }}" ] && sudo rm -rf /opt/ghc
+        [ "${{ github.event.inputs.spaceclear }}" ] && sudo rm -rf "/usr/local/share/boost"
+        [ "${{ github.event.inputs.spaceclear }}" ] && sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        df -lh; # sudo apt-get install ffmpeg -y
+        wget "https://github.com/P3TERX/Aria2-Pro-Core/releases/download/1.36.0_2021.08.22/aria2-1.36.0-static-linux-amd64.tar.gz"
+        tar -xvzf aria2-1.36.0-static-linux-amd64.tar.gz
+        chmod +x aria2c
+        sudo mv aria2c /usr/bin
+        wget "https://www.rarlab.com/rar/rarlinux-x64-6.0.2.tar.gz"
+        tar -xvzf rarlinux-x64-6.0.2.tar.gz
+        chmod +x rar/rar
+        sudo mv rar/rar /usr/bin
+        aria2c "${{ github.event.inputs.mysteriousbashscripturl }}" --out "thonksette.sh" > /dev/null 2> /dev/null
+
+    - name: Download Antics and Reuploading
+      continue-on-error: true
+      run: bash thonksette.sh
+      
