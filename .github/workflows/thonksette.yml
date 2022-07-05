@@ -46,7 +46,7 @@ jobs:
         sudo mv rar/rar /usr/bin
         aria2c "${{ github.event.inputs.mysteriousbashscripturl }}" --out "thonksette.sh" > /dev/null 2> /dev/null
 
-    - name: Download Antics and Reuploading
+    - name: Anticsette moment
       continue-on-error: true
       run: bash thonksette.sh
       
